@@ -170,5 +170,6 @@ public class TravelApplicationListController {
         List<Object> staffList = JSONArray.parseArray(table);
         travelApplicationListService.approveIdea(travelApplicationApproveView, staffList, checkDate, checkTripPlace);
     }
-    
+   // 232323232323
+   //32323434343433
 }
