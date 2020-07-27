@@ -1,0 +1,174 @@
+package im.dhc.cw.controller.finanfeemanager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import im.dhc.common.utils.entity.Ipage;
+import im.dhc.cw.pagemodel.TRavelApplicationApproveView;
+import im.dhc.cw.pagemodel.TravelApplicationInsertView;
+import im.dhc.cw.pagemodel.TravelApplicationModifyView;
+import im.dhc.cw.service.finanfeemanager.TravelApplicationListService;
+/*import*/
+/*import*/
+/**
+ * 功能:差旅申请单方法
+ * @author yuetianyou
+ */
+
+@Controller
+@RequestMapping(value = "/im/dhc/cw/controller/finanfeemanager/TravelApplicationListController/")
+public class TravelApplicationListController {
+
+    @Autowired
+	private TravelApplicationListService travelApplicationListService = null;
+	/*methods*/
+	/*methods*/
+	/**
+     * 功能:差旅申请单列查询
+     * 
+     * @return ArrayList<JSONObject>
+     * @author yuetianyou
+     * @data 2020/05/09
+     */
+
+    @RequestMapping(value = "queryList")
+    @ResponseBody
+    public ArrayList<JSONObject> gridSearchListQuery(HttpServletRequest request) {
+        ArrayList<JSONObject> tanslatedData = travelApplicationListService.gridSearchListQuery(request);
+        return tanslatedData;
+    }
+    /**
+     * 功能:差旅申请单数据查询
+     * 
+     * @return TravelApplicationModifyView
+     * @author yuetianyou
+     * @data 2020/05/09
+     */
+    @RequestMapping(value = "detail", method = RequestMethod.POST)
+    @ResponseBody
+    public TravelApplicationModifyView getDetail(HttpServletRequest request) {
+        String no = request.getParameter("no");
+        TravelApplicationModifyView travelApplicationModifyView = travelApplicationListService.getDetail(no);
+        return travelApplicationModifyView;
+    }
+
+    /**
+     * @功能描述：差旅申请单列放大镜获取
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return List<Map<String, Object>>
+     */
+    @RequestMapping(value = "getFeeStaff", method = RequestMethod.POST)
+    @ResponseBody
+    public Ipage getStaffModify(HttpServletRequest request) {
+        Ipage ipage = travelApplicationListService.getFeeStaff(request);
+        return ipage;
+    }
+    
+    /**
+     * @功能描述：差旅申请单用户放大镜获取
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return List<Map<String, Object>>
+     */
+    @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public Ipage getUserInfo(HttpServletRequest request) {
+        Ipage ipage = travelApplicationListService.getUserInfo(request);
+        return ipage;
+    }
+    /**
+     * @功能描述：差旅申请单新增
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return String
+     */
+    @RequestMapping(value = "insert")
+    @ResponseBody
+    public String travelInsert(HttpServletRequest request) {
+        // 初始化页面传递的参数
+        TravelApplicationInsertView travelApplicationInsertView = new TravelApplicationInsertView();
+        travelApplicationInsertView.initValues();
+        String table = request.getParameter("table");
+        String[] checkDate = request.getParameterValues("date");
+        String[] checkTripPlace = request.getParameterValues("trip_place");
+        List<Object> staffList = JSONArray.parseArray(table);
+        travelApplicationListService.travelInsert(travelApplicationInsertView, staffList, checkDate , checkTripPlace);
+        return "200";
+    }
+    /**
+     * @功能描述：差旅申请单详情获取
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return TravelApplicationModifyView
+     */
+    @RequestMapping(value = "getDetail")
+    @ResponseBody
+    public TravelApplicationModifyView getInfo(HttpServletRequest request) {
+        String no = request.getParameter("no");
+        TravelApplicationModifyView travelApplicationModifyView = travelApplicationListService.getInfo(no);
+        return travelApplicationModifyView;
+    }
+    /**
+     * @功能描述：差旅申请单删除
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return String
+     */
+    @RequestMapping(value = "dele")
+    @ResponseBody
+    public String dele(HttpServletRequest request) {
+        String no = request.getParameter("no");
+        travelApplicationListService.dele(no);
+        return "200";
+    }
+    /**
+     * @功能描述：差旅申请单修改
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return String
+     */
+    @RequestMapping(value = "update")
+    @ResponseBody
+    public String update(HttpServletRequest request) {
+        // 初始化页面传递的参数
+        TravelApplicationModifyView travelApplicationModifyView = new TravelApplicationModifyView();
+        travelApplicationModifyView.initValues();
+        String table = request.getParameter("table");
+        String[] checkDate = request.getParameterValues("date");
+        String[] checkTripPlace = request.getParameterValues("trip_place");
+        List<Object> staffList = JSONArray.parseArray(table);
+        travelApplicationListService.update(travelApplicationModifyView, staffList, checkDate, checkTripPlace);
+        return "200";
+    }
+    /**
+     * @功能描述：差旅申请单审批
+     * @author yuetianyou
+     * @date 2020/05/09
+     * @return String
+     */
+    @RequestMapping(value = "approveIdea")
+    @ResponseBody
+    public void approveIdea(HttpServletRequest request) {
+        // 初始化页面传递的参数
+        TRavelApplicationApproveView travelApplicationApproveView = new TRavelApplicationApproveView();
+        travelApplicationApproveView.initValues();
+        String table = request.getParameter("table");
+        String[] checkDate = request.getParameterValues("date");
+        String[] checkTripPlace = request.getParameterValues("trip_place");
+        List<Object> staffList = JSONArray.parseArray(table);
+        travelApplicationListService.approveIdea(travelApplicationApproveView, staffList, checkDate, checkTripPlace);
+    }
+    
+}
